@@ -132,15 +132,18 @@ table th, table td { overflow: hidden; }
                                     		<div class="collapsed bullet_search_class_div" id={{ 'bullet'.$t['merged_id'] }} role="button" data-toggle="collapse" href={{ '#bullet_description'.$t['merged_id'] }} aria-expanded="false" aria-controls={{ '#bullet_description'.$t['merged_id'] }}>
                                         		{{$t['merged_id'].'.   '.$t['text']}}
                                     		</div>
+                                    		<div style="padding-top: 15px">
+                                    			<button type="submit" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal2" id={{ 'positive_phrase_'.$key }}>Positive-Phrase</button>
+                                    		</div>
                                     	</div>
                                     	<div class="col-md-6">
                                     		<div class="collapsed comp_search_class_div" id={{ 'comp'.$t['merged_id'] }} role="button" data-toggle="collapse" href={{ '#comp_description'.$t['merged_id'] }} aria-expanded="false" aria-controls={{ '#comp_description'.$t['merged_id'] }}>
                                         		@if (sizeof($all_c[$key][0]) == 0)
-                                        			<a></a>
+                                        			<a>...</a>
                                     			@else
                                         			<table class="table table-striped">
                                         				<tr>
-                                        					<th>Competancy Name</th>
+                                        					<th>Competency Name</th>
                                         					<th>Position</th>
                                         					<th>Action</th>
                                         				</tr>
@@ -396,13 +399,13 @@ table th, table td { overflow: hidden; }
     						<a class="nav-link" id="remove_comp-tab" data-toggle="tab" href="#remove_comp" role="tab" aria-controls="remove_comp" aria-selected="false">Remove Competency</a>
   						</li>
   						<li class="nav-item">
-    						<a class="nav-link" id="make_anti_phrase-tab" data-toggle="tab" href="#make_anti_phrase" role="tab" aria-controls="make_anti_phrase" aria-selected="false">Make Anti-Phrase</a>
+    						<a class="nav-link" id="make_anti_phrase-tab" data-toggle="tab" href="#make_anti_phrase_logic" role="tab" aria-controls="make_anti_phrase_logic" aria-selected="false">Make Anti-Phrase</a>
   						</li>
 					</ul>
-					<div class="tab-content" id="myTabContent">
+					<div class="tab-content" id="myTabContent1">
 	  					<div class="tab-pane fade show active" id="add_comp" role="tabpanel" aria-labelledby="add_comp-tab">Not allowed in this case</div>
 	  					<div class="tab-pane fade" id="remove_comp" role="tabpanel" aria-labelledby="remove_comp-tab">Not allowed in this case</div>
-	  					<div class="tab-pane fade" id="make_anti_phrase" role="tabpanel" aria-labelledby="make_anti_phrase-tab">Not allowed in this case</div>
+	  					<div class="tab-pane fade" id="make_anti_phrase_logic" role="tabpanel" aria-labelledby="make_anti_phrase_logic-tab">Not allowed in this case</div>
 					</div>
 	     		</div>
 	      		<div class="modal-footer">
@@ -411,6 +414,93 @@ table th, table td { overflow: hidden; }
     		</div>
   		</div>
   	</div>
+
+  	<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+  		<div class="modal-dialog modal-lg" role="document">
+    		<div class="modal-content">
+      			<div class="modal-header">
+        			<h5 class="modal-title" id="exampleModalLabel2">Make Positive Phrase</h5>
+      			</div>
+	      		<div class="modal-body">
+	        		<ul class="nav nav-tabs nav-fill" id="myTab2" role="tablist">
+  						<li class="nav-item">
+    						<a class="nav-link active" id="pos_phrase_category-tab" data-toggle="tab" href="#pos_phrase_category" role="tab" aria-controls="pos_phrase_category" aria-selected="true">Category</a>
+  						</li>
+  						<li class="nav-item">
+    						<a class="nav-link" id="pos_phrase_datapanel-tab" data-toggle="tab" href="#pos_phrase_datapanel" role="tab" aria-controls="pos_phrase_datapanel" aria-selected="false">Data Panel</a>
+  						</li>
+					</ul>
+					<div class="tab-content" id="myTabContent2">
+	  					<div class="tab-pane fade show active" id="pos_phrase_category" role="tabpanel" aria-labelledby="pos_phrase_category-tab">
+	  						<div>
+	  							<div style="padding-top: 10px">
+	  								<input type="text" class="form-control" value="" id="pos_phrase_category_bullet_input">
+	  							</div>
+	  							<div style="padding-top: 15px">
+	  								<a style="font-size: 15px">Select Category</a>
+	  							</div>
+	  							<hr>
+	  							<div class="container">
+	  								<div class="row">
+	  									<div class="col-md-12">
+	  										<select id="pos_phrase_select_category">
+	  											<option>software_knowledge</option>
+	  											<option>societies_clubs</option>
+	  											<option>positions_of_responsibility</option>
+	  											<option>programming_language</option>
+	  											<option>academic_excellence</option>
+	  											<option>certifications</option>
+	  											<option>course_name</option>
+	  											<option>tools_skills</option>
+	  										</select>
+	  									</div>
+	  								</div>
+	  							</div>
+	  							<div style="padding-top:15px">
+	  								<button type="button" class="btn btn-secondary" id="pos_phrase_category_button" name="">ADD</button>
+	  							</div>
+	  						</div>
+	  					</div>
+	  					<div class="tab-pane fade" id="pos_phrase_datapanel" role="tabpanel" aria-labelledby="pos_phrase_datapanel-tab">
+	  						<div>
+	  							<div style="padding-top: 10px">
+	  								<input type="text" class="form-control" value="" id="pos_phrase_datapanel_bullet_input">
+	  							</div>
+	  							<div style="padding-top: 15px">
+	  								<a style="font-size: 15px">Select Competencies to make Anti-Phrase</a>
+	  							</div>
+	  							<hr>
+	  							<div class="container">
+	  								<div class="row">
+	  									<div class="col-md-6">
+	  										<select id="pos_phrase_select_data_panel">
+	  											<option>concentration</option>
+	  											<option>functional_area</option>
+	  											<option>job_role</option>
+	  										</select>
+	  									</div>
+	  									<div class="col-md-6">
+	  										<select multiple="multiple" style="width: 200px" id="pos_phrase_select_comp_data_panel" size="5">
+	  											<option>Analytical</option>
+	  											<option>Communication</option>
+	  											<option>Initiative</option>
+	  											<option>Leadership</option>
+	  											<option>Teamwork</option>
+	  										</select>
+	  									</div>
+	  								</div>
+	  							</div>
+	  						</div>
+	  					</div>
+					</div>
+	     		</div>
+	      		<div class="modal-footer">
+	        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	      		</div>
+    		</div>
+  		</div>
+  	</div>
+
   	<div class="container d-none">
 		<div class="row">
   			<div class="col-md-12">
@@ -449,8 +539,9 @@ table th, table td { overflow: hidden; }
 // }
 
 $('.selectpicker').selectpicker();
-  
+
 $(document).ready(function(){
+	var useful_array = [["software_knowledge", "Analytical"],["societies_clubs", "Teamwork"],["positions_of_responsibility", "Leadership"],["programming_language", "Analytical"],["academic_excellence", "Leadership"],["certifications", "Analytical"],["course_name", "Analytical"],["tools_skills", "Analytical"]];
 	var all_trs = $(document.getElementsByClassName("ele_sub_table"));
 	console.log(all_trs.length);
 	$.each( all_trs, function( key, value ) {
@@ -540,56 +631,65 @@ $('#exampleModal1').on('show.bs.modal', function (event) {
   		var id_back = trId.split('_')[1] + "_" + trId.split('_')[2] + "_" + trId.split('_')[3];
   		var col0 = trReq.getElementsByClassName("sub_ele_td_source")[0]
   		var col1 = trReq.getElementsByClassName("sub_ele_td_components")[0]
-  		var col2 = trReq.getElementsByClassName("sub_ele_td_hs")[0]
-  		var col3 = trReq.getElementsByClassName("sub_ele_td_ss")[0]
+  		// var col2 = trReq.getElementsByClassName("sub_ele_td_hs")[0]
+  		// var col3 = trReq.getElementsByClassName("sub_ele_td_ss")[0]
+  		var col4 = trReq.getElementsByClassName("sub_ele_td_comp")[0]
   		var compo_lis = col1.getElementsByTagName("td")
+  		var comp_lis = col4.getElementsByTagName("td")[0]
   		// console.log(compo_lis[1].textContent)
-  		var hs_lis = col2.getElementsByTagName("td")
-  		var ss_lis = col3.getElementsByTagName("td")
-  		console.log(ss_lis.length)
+  		// var hs_lis = col2.getElementsByTagName("td")
+  		// var ss_lis = col3.getElementsByTagName("td")
+  		// console.log(ss_lis.length)
 		var modal = $(this)
-		modal.find('.modal-title').text('Editing in ' + col0.textContent)
 		// var tab_body = modal.find("#myTabContent")
-		modal.find('#remove_hs').html('<a>Not allowed in this case</a>')
-		modal.find('#add_ss').html('<a>Not allowed in this case</a>')
-		modal.find('#add_hs').html('<a>Not allowed in this case</a>')
-		modal.find('#remove_ss').html('<a>Not allowed in this case</a>')
-		modal.find('#remove_hs_ss').html('<a>Not allowed in this case</a>')
-		if (col0.textContent === "vn_db_search"){
+		modal.find('#add_comp').html('<a>Not allowed in this case</a>')
+		modal.find('#remove_comp').html('<a>Not allowed in this case</a>')
+		modal.find('#make_anti_phrase_logic').html('<a>Not allowed in this case</a>')
+		if (col0.textContent === "category_skills"){
   			modal.find('.modal-title').text("Editing in " + col0.textContent);
-  			var div_contents_hs_add = "<div><div style=\"padding-top: 15px\"><a style=\"font-size: 15px\">Add HARD-SKILL to &nbsp;&nbsp;<b><u>"  + compo_lis[1].textContent + "&nbsp;&nbsp;" + compo_lis[3].textContent + "</u></b></a></div><hr><input type=\"text\" class=\"form-control\" placeholder=\"\" id=\"add_hs_input\"><div style=\"padding-top:15px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal_add_hs_button\" name=\"" +  id_back + "\">ADD</button></div></div>";
-  			var div_contents_ss_add = "<div><div style=\"padding-top: 15px\"><a style=\"font-size: 15px\">Add SOFT-SKILL to &nbsp;&nbsp;<b><u>"  + compo_lis[1].textContent + "&nbsp;&nbsp;" + compo_lis[3].textContent + "</u></b></a></div><hr><div class=\"container\"><div class=\"row\"><div class=\"col-md-12\"><select data-live-search=\"true\" class=\"selectpicker\" id=\"ss_add_select\" data-title=\"Select Soft-Skill\"><option data-tokens=\"Analytical Skills\">Analytical Skills</option><option data-tokens=\"Building Relationships\">Building Relationships</option><option data-tokens=\"Client focused\">Client focused</option><option data-tokens=\"Collaboration\">Collaboration</option><option data-tokens=\"Collaborative Leadership\">Collaborative Leadership</option><option data-tokens=\"Communication Skills\">Communication Skills</option><option data-tokens=\"Conceptual Thinking\">Conceptual Thinking</option><option data-tokens=\"Conflict Management\">Conflict Management</option><option data-tokens=\"Coordinating Activities\">Coordinating Activities</option><option data-tokens=\"Creative Skills\">Creative Skills</option><option data-tokens=\"Creative thinking\">Creative thinking</option><option data-tokens=\"Critical Thinking\">Critical Thinking</option><option data-tokens=\"Cross-cultural Teaming\">Cross-cultural Teaming</option><option data-tokens=\"Cross-functional Team Leadership\">Cross-functional Team Leadership</option><option data-tokens=\"Customer Oriented\">Customer Oriented</option><option data-tokens=\"Dealing with ambiguity\">Dealing with ambiguity</option><option data-tokens=\"Detail Oriented\">Detail Oriented</option><option data-tokens=\"Entrepreneurial skills\">Entrepreneurial skills</option><option data-tokens=\"Facilitation\">Facilitation</option><option data-tokens=\"Global Leadership\">Global Leadership</option><option data-tokens=\"Idea Generation\">Idea Generation</option><option data-tokens=\"Influencing People and Outcomes\">Influencing People and Outcomes</option><option data-tokens=\"Initiative\">Initiative</option><option data-tokens=\"Innovation\">Innovation</option><option data-tokens=\"Innovation Management\">Innovation Management</option><option data-tokens=\"Intercultural Skills\">Intercultural Skills</option><option data-tokens=\"Interpersonal skills\">Interpersonal skills</option><option data-tokens=\"Investigative\">Investigative</option><option data-tokens=\"Lateral Thinking\">Lateral Thinking</option><option data-tokens=\"Leadership\">Leadership</option><option data-tokens=\"Liaisoning\">Liaisoning</option><option data-tokens=\"Management Coaching\">Management Coaching</option><option data-tokens=\"Management Skills\">Management Skills</option><option data-tokens=\"Mathematical Reasoning\">Mathematical Reasoning</option><option data-tokens=\"Mentoring\">Mentoring</option><option data-tokens=\"Motivational skills\">Motivational skills</option><option data-tokens=\"Multilingual\">Multilingual</option><option data-tokens=\"Multitasking\">Multitasking</option><option data-tokens=\"Natural Leadership\">Natural Leadership</option><option data-tokens=\"Negotiation\">Negotiation</option><option data-tokens=\"Networking\">Networking</option><option data-tokens=\"Peer Support\">Peer Support</option><option data-tokens=\"People Development\">People Development</option><option data-tokens=\"People Management\">People Management</option><option data-tokens=\"Personal Coaching\">Personal Coaching</option><option data-tokens=\"Persuasion skills\">Persuasion skills</option><option data-tokens=\"Planning\">Planning</option><option data-tokens=\"Practical Thinking\">Practical Thinking</option><option data-tokens=\"Presentation Skills\">Presentation Skills</option><option data-tokens=\"Problem Solving\">Problem Solving</option><option data-tokens=\"Public Speaking\">Public Speaking</option><option data-tokens=\"Quantitative Aptitude\">Quantitative Aptitude</option><option data-tokens=\"Reasoning Skills\">Reasoning Skills</option><option data-tokens=\"Record Of Success\">Record Of Success</option><option data-tokens=\"Relationship Building/ Management\">Relationship Building/ Management</option><option data-tokens=\"Relationship Management\">Relationship Management</option><option data-tokens=\"Stakeholder Engagement\">Stakeholder Engagement</option><option data-tokens=\"Strategic Thinking\">Strategic Thinking</option><option data-tokens=\"Structured Problem Solving\">Structured Problem Solving</option><option data-tokens=\"Team building\">Team building</option><option data-tokens=\"Team Leadership\">Team Leadership</option><option data-tokens=\"Team management\">Team management</option><option data-tokens=\"Teamwork\">Teamwork</option><option data-tokens=\"Technical Leadership\">Technical Leadership</option><option data-tokens=\"Time Management\">Time Management</option><option data-tokens=\"Time tracking\">Time tracking</option><option data-tokens=\"Timely Delivery\">Timely Delivery</option><option data-tokens=\"Timely Execution\">Timely Execution</option><option data-tokens=\"Verbal Communication\">Verbal Communication</option><option data-tokens=\"Visual Communication\">Visual Communication</option><option data-tokens=\"Written Communication\">Written Communication</option></select></div></div></div><div style=\"padding-top:10px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal_add_ss_button\" name=\"" +  id_back + "\">ADD</button></div></div>";
-  			modal.find('#add_ss').html(div_contents_ss_add);
-  			$(".selectpicker").selectpicker('refresh')
-			modal.find('#add_hs').html(div_contents_hs_add);
-  			if (hs_lis.length == 1 && ss_lis.length == 0){
-  				var corr_bull = $('#' + bull_id).text();
-  				var corr_bull1 = jQuery.trim(corr_bull);
-  				console.log(corr_bull1);
-  				var div_contents = "<div style=\"padding-top: 15px\" class=\"container\"><div class=\"row\"><div class=\"col-md-9\"><a style=\"font-size: 15px\">Remove HARD-SKILL &nbsp;&nbsp;<b><u>" + hs_lis[0].textContent + "</u></b>&nbsp;&nbsp; from &nbsp;&nbsp;<b><u>"  + compo_lis[1].textContent + "&nbsp;&nbsp;" + compo_lis[3].textContent + "</u></b></a></div><div class=\"col-md-3\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal_remove_hs_button\" name=\"" +  id_back + "\">REMOVE</button></div></div></div>";
-  				var anti_phrase_contents = "<div><div style=\"padding-top: 10px\"><input type=\"text\" class=\"form-control\" value=\""+ corr_bull1 + "\" id=\"anti_phrase_bullet_description\"></div><div style=\"padding-top: 10px\" class=\"row\"><div class=\"col-md-3\">HARD-SKILL</div><div class=\"col-md-3\"><u><b>" + hs_lis[0].textContent + "</u></b></div></div><div style=\"padding-top: 10px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"make_anti_phrase_vn_button\" name=\"" +  id_back + "_hs" + "\">MAKE ANTI-PHRASE</button></div></div>";
-  				modal.find('#remove_hs').html(div_contents)
-  				modal.find('#remove_ss').html('<a>Not allowed in this case</a>')
-  				modal.find('#make_anti_phrase_vn').html(anti_phrase_contents)
-  				modal.find('#remove_hs_ss').html('<a>Not allowed in this case</a>')
-  			}
-  			if (hs_lis.length == 0 && ss_lis.length == 1){
-  				var corr_bull = $('#' + bull_id).text();
-  				var corr_bull1 = jQuery.trim(corr_bull);
-  				console.log(corr_bull1);
-  				var div_contents = "<div style=\"padding-top: 15px\" class=\"container\"><div class=\"row\"><div class=\"col-md-9\"><a style=\"font-size: 15px\">Remove SOFT-SKILL &nbsp;&nbsp;<b><u>" + ss_lis[0].textContent + "</u></b>&nbsp;&nbsp; from &nbsp;&nbsp;<b><u>"  + compo_lis[1].textContent + "&nbsp;&nbsp;" + compo_lis[3].textContent + "</u></b></a></div><div class=\"col-md-3\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal_remove_ss_button\" name=\"" +  id_back + "\">REMOVE</button></div>";
-  				var anti_phrase_contents = "<div><div style=\"padding-top: 10px\"><input type=\"text\" class=\"form-control\" value=\""+ corr_bull1 + "\" id=\"anti_phrase_bullet_description\"></div><div style=\"padding-top: 10px\" class=\"row\"><div class=\"col-md-3\">SOFT-SKILL</div><div class=\"col-md-3\"><u><b>" + ss_lis[0].textContent + "</u></b></div></div><div style=\"padding-top: 10px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"make_anti_phrase_vn_button\" name=\"" +  id_back + "_ss" + "\">MAKE ANTI-PHRASE</button></div></div>";
-  				modal.find('#remove_hs').html('<a>Not allowed in this case</a>')
-  				modal.find('#remove_ss').html(div_contents)
-  				modal.find('#make_anti_phrase_vn').html(anti_phrase_contents)
-  				modal.find('#remove_hs_ss').html('<a>Not allowed in this case</a>')
-  			}
-  			if (hs_lis.length >= 1 && ss_lis.length == 1){
-  				var div_contents = "<div style=\"padding-top: 15px\" class=\"container\"><div class=\"row\"><div class=\"col-md-9\"><a style=\"font-size: 15px\">Remove HARD-SKILL &nbsp;&nbsp;<b><u>" + hs_lis[(hs_lis.length)-1].textContent + "</u></b>&nbsp;&nbsp; to SOFT-SKILL &nbsp;&nbsp;<b><u>" + ss_lis[0].textContent + "</u></b>&nbsp;&nbsp; relation from &nbsp;&nbsp;<b><u>"  + compo_lis[1].textContent + "&nbsp;&nbsp;" + compo_lis[3].textContent + "</u></b></a></div><div class=\"col-md-3\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal_remove_hs_ss_button\" name=\"" +  id_back + "\">REMOVE</button></div>";
-  				modal.find('#remove_hs').html('<a>Not allowed in this case</a>')
-  				modal.find('#remove_ss').html('<a>Not allowed in this case</a>')
-  				modal.find('#remove_hs_ss').html(div_contents)
-  			}
+  			var corr_bull = $('#' + bull_id).text();
+  			var corr_bull1 = jQuery.trim(corr_bull);
+  			console.log(corr_bull1);
+  			var div_contents_add_comp = "<div><div style=\"padding-top: 15px\"><a style=\"font-size: 15px\">Add new keyword to category &nbsp;&nbsp;<b><u>"  + compo_lis[3].textContent + "</u></b></a></div><hr><div class=\"container\"><div class=\"row\"><div class=\"col-md-12\"><select id=\"comp_add_select\"><option>" + useful_array[0][0] + "</option><option>" + useful_array[1][0] + "</option><option>" + useful_array[2][0] + "</option><option>" + useful_array[3][0] +"</option><option>" + useful_array[4][0] + "</option><option>" + useful_array[5][0] + "</option><option>" + useful_array[6][0] + "</option><option>" + useful_array[7][0] + "</option></select></div></div></div><div style=\"padding-top:15px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal1_add_comp_button\" name=\"" +  id_back + "\">ADD</button></div></div>";
+  			var div_contents_remove_comp = "<div><div style=\"padding-top: 15px\"><a style=\"font-size: 15px\">Remove category &nbsp;&nbsp;<b><u>"  + compo_lis[1].textContent + "</u></b>&nbsp;&nbsp; from keyword &nbsp;&nbsp;<b><u>" + compo_lis[3].textContent + "</u></b></a></div><hr><div style=\"padding-top:10px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal1_remove_comp_button\" name=\"" +  id_back + "\">REMOVE</button></div></div>";
+  			var div_contents_make_anti_phrase = "<div><div style=\"padding-top: 10px\"><input type=\"text\" class=\"form-control\" value=\""+ corr_bull1 + "\" id=\"anti_phrase_category_bullet_description\"></div><div style=\"padding-top: 10px\" class=\"row\"><div class=\"col-md-3\">Competency</div><div class=\"col-md-3\"><u><b>" + comp_lis.textContent + "</u></b></div></div><div style=\"padding-top: 10px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"make_anti_phrase_category_button\" name=\"" +  id_back  + "\">MAKE ANTI-PHRASE</button></div></div>";
+  			modal.find('#add_comp').html(div_contents_add_comp);
+			modal.find('#remove_comp').html(div_contents_remove_comp);
+			modal.find('#make_anti_phrase_logic').html(div_contents_make_anti_phrase);
+  		}
+  		else if (col0.textContent.split('_')[0] === "data" ){
+  			modal.find('.modal-title').text("Editing in " + col0.textContent);
+  			var corr_bull = $('#' + bull_id).text();
+  			var corr_bull1 = jQuery.trim(corr_bull);
+  			console.log(corr_bull1);
+  			var div_contents_add_comp = "<div><div style=\"padding-top: 15px\"><a style=\"font-size: 15px\">Add new Competency to keyword &nbsp;&nbsp;<b><u>"  + compo_lis[1].textContent + "</u></b></a></div><hr><div class=\"container\"><div class=\"row\"><div class=\"col-md-12\"><select multiple=\"multiple\" style=\"width: 200px\" size=\"5\" id=\"comp_add_select_data_panel\"><option>Analytical</option><option>Communication</option><option>Initiative</option><option>Leadership</option><option>Teamwork</option></select></div></div></div><div style=\"padding-top:15px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal1_add_comp_button_data_panel\" name=\"" +  id_back + "\">ADD</button></div></div>";
+
+  			var all_comp_lis = col4.getElementsByTagName("td");
+  			var all_comp_arr = [];
+  			$.each(all_comp_lis, function(ke_td_dp, val_td_dp) { 
+    			var te_comp = val_td_dp.innerText;
+    			all_comp_arr.push(te_comp);
+			});
+			console.log(all_comp_arr[0])
+  			var div_contents_remove_comp = "<div><div style=\"padding-top: 15px\"><a style=\"font-size: 15px\">Remove Competency from keyword &nbsp;&nbsp;<b><u>"  + compo_lis[1].textContent + "</u></b></a></div><hr><div class=\"container\"><div class=\"row\"><div class=\"col-md-12\"><select multiple=\"multiple\" style=\"width: 200px\" id=\"comp_remove_select_data_panel\">";
+  			$.each(all_comp_arr, function(ke_comp_op, val_comp_op) { 
+    			var option_comp = "<option>" + val_comp_op + "</option>";
+    			div_contents_remove_comp += option_comp;
+			});
+			div_contents_remove_comp += "</select></div></div></div><div style=\"padding-top:10px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal1_remove_comp_button_data_panel\" name=\"" +  id_back + "\">REMOVE</button></div></div>";
+
+
+  			var div_contents_make_anti_phrase = "<div><div style=\"padding-top: 10px\"><input type=\"text\" class=\"form-control\" value=\""+ corr_bull1 + "\" id=\"anti_phrase_data_panel_bullet_description\"></div><div style=\"padding-top: 15px\"><a style=\"font-size: 15px\"><a>Select Competencies to make Anti-Phrase</a></div><hr><div class=\"container\"><div class=\"row\"><div class=\"col-md-12\"><select multiple=\"multiple\" style=\"width: 200px\" id=\"comp_antiphrase_select_data_panel\">";
+  			$.each(all_comp_arr, function(ke_comp_op, val_comp_op) { 
+    			var option_comp = "<option>" + val_comp_op + "</option>";
+    			div_contents_make_anti_phrase += option_comp;
+			});
+			div_contents_make_anti_phrase += "</select></div></div></div><div style=\"padding-top: 10px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"make_anti_phrase_data_panel_button\" name=\"" +  id_back  + "\">MAKE ANTI-PHRASE</button></div></div>";
+
+
+  			modal.find('#add_comp').html(div_contents_add_comp);
+			modal.find('#remove_comp').html(div_contents_remove_comp);
+			modal.find('#make_anti_phrase_logic').html(div_contents_make_anti_phrase);
   		}
   		// Extract info from data-* attributes
   		// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
@@ -597,6 +697,19 @@ $('#exampleModal1').on('show.bs.modal', function (event) {
   		// var modal = $(this)
   		// modal.find('.modal-title').text('Editing' + col0.textContent)
   		// modal.find('.modal-body input').val(trId)
+	});
+
+
+	$('#exampleModal2').on('show.bs.modal', function (event) {
+  		var button = $(event.relatedTarget) // Button that triggered the modal
+  		var trId = button.attr("id")
+  		var bull_id = "bullet" + trId.split('_')[2];
+  		// var id_back = trId.split('_')[1] + "_" + trId.split('_')[2] + "_" + trId.split('_')[3];
+  		var corr_bull = $('#' + bull_id).text();
+  		var corr_bull1 = jQuery.trim(corr_bull);
+  		console.log(corr_bull1);
+		$("#pos_phrase_category_button").attr("name", trId.split('_')[2]);
+		$("#pos_phrase_category_bullet_input").attr("value", corr_bull1);
 	});
 
 	$("#remove_hs").delegate("#modal_remove_hs_button", "click", function() {
@@ -635,7 +748,7 @@ $('#exampleModal1').on('show.bs.modal', function (event) {
 		var trReq = document.getElementById(tr_id)
   		var col0 = trReq.getElementsByClassName("sub_ele_td_source")[0]
   		var col1 = trReq.getElementsByClassName("sub_ele_td_components")[0]
-		var values = $('select option:selected').val();
+		var values = $('#ss_add_select option:selected').val();
 		console.log(values);
 		var req_table_id = "try_table_" + but_name.split('_')[0] + '_' + but_name.split('_')[1]
 		var req_table = document.getElementById(req_table_id)
@@ -674,14 +787,182 @@ $('#exampleModal1').on('show.bs.modal', function (event) {
 		var req_table_id = "try_table_" + but_name.split('_')[0]
 		var req_table = document.getElementById(req_table_id)
 		var req_tableBody = req_table.getElementsByTagName("tbody")[0]
-		var make_anti_phrase_tr = "<tr class=\"ele_sub_table to_make_anti_phrase success\"><td class=\"sub_ele_td_source\">logic::anti_phrase</td><td class=\"sub_ele_td_components\">" + bla + "</td><td class=\"sub_ele_td_hs\">" + col.innerHTML + "</td><td class=\"sub_ele_td_ss\"><div><a></a></div></td><td class=\"sub_ele_td_comp\"><div><a></a></div></td></tr>"
+		var make_anti_phrase_tr = "<tr class=\"ele_sub_table to_make_anti_phrase success\"><td class=\"sub_ele_td_source\">logic::anti_phrase_vn</td><td class=\"sub_ele_td_components\">" + bla + "</td><td class=\"sub_ele_td_hs\">" + col.innerHTML + "</td><td class=\"sub_ele_td_ss\"><div><a></a></div></td><td class=\"sub_ele_td_comp\"><div><a></a></div></td></tr>"
 		if (but_name.split("_")[3] == "ss"){
-			make_anti_phrase_tr = "<tr class=\"ele_sub_table to_add_anti_phrase success\"><td class=\"sub_ele_td_source\">logic::anti_phrase</td><td class=\"sub_ele_td_components\">" + bla + "</td><td class=\"sub_ele_td_hs\"><div><a></a></div></td><td class=\"sub_ele_td_ss\">" + col.innerHTML + "</td><td class=\"sub_ele_td_comp\"><div><a></a></div></td></tr>"
+			make_anti_phrase_tr = "<tr class=\"ele_sub_table to_add_anti_phrase success\"><td class=\"sub_ele_td_source\">logic::anti_phrase_vn</td><td class=\"sub_ele_td_components\">" + bla + "</td><td class=\"sub_ele_td_hs\"><div><a></a></div></td><td class=\"sub_ele_td_ss\">" + col.innerHTML + "</td><td class=\"sub_ele_td_comp\"><div><a></a></div></td></tr>"
 		}
 		req_tableBody.innerHTML += make_anti_phrase_tr
 		alert("Anti-Phrase added in table")
 		// console.log(req_tableBody.innerHTML);
 	});
+
+
+	$("#remove_comp").delegate("#modal1_remove_comp_button", "click", function() {
+		var but_name = $(this).attr("name");
+		var tr_id = "subMyInput_" + but_name
+		console.log(tr_id);
+		var req_tr = $(document.getElementById(tr_id))
+		req_tr.addClass("error to_remove_comp")
+	});
+
+
+	$("#add_comp").delegate("#modal1_add_comp_button", "click", function() {
+		var but_name = $(this).attr("name");
+		var tr_id = "subMyInput_" + but_name
+		var trReq = document.getElementById(tr_id)
+  		var col0 = trReq.getElementsByClassName("sub_ele_td_source")[0]
+  		var col1 = trReq.getElementsByClassName("sub_ele_td_components")[0]
+  		var tr_keyword = col1.getElementsByTagName("tr")[1]
+		var values = $('#comp_add_select option:selected').val();
+		console.log(values);
+		var req_comp = "";
+		$.each(useful_array, function(ke_cate, val_comp) { 
+    		if(val_comp[0] == values) {
+    			req_comp = val_comp[1];
+        		return false; 
+    		}
+		});
+		console.log(req_comp)
+		var req_table_id = "try_table_" + but_name.split('_')[0] + '_' + but_name.split('_')[1]
+		var req_table = document.getElementById(req_table_id)
+		var req_tableBody = req_table.getElementsByTagName("tbody")[0]
+		req_tableBody.innerHTML += "<tr class=\"ele_sub_table to_add_comp success\"><td class=\"sub_ele_td_source\">" + col0.innerHTML + "</td><td class=\"sub_ele_td_components\"><div><table class=\"table\"><tr><td><span style=\"font-weight:bold\">category</span></td><td>" + values + "</td></tr><tr>" + tr_keyword.innerHTML +"</tr></table></div></td><td class=\"sub_ele_td_hs\"><div><a></a></div></td><td class=\"sub_ele_td_ss\"><div><a></a></div></td><td class=\"sub_ele_td_comp\"><div><table class=\"table\"><tr><td>" + req_comp + "</td></tr></table></div></td></tr>"
+		// var but_name = $(this).attr("name");
+		// var tr_id = "subMyInput_" + but_name
+	});
+
+
+	$("#make_anti_phrase_logic").delegate("#make_anti_phrase_category_button", "click", function() {
+		var but_name = $(this).attr("name");
+		var tr_id = "subMyInput_" + but_name.split("_")[0] + '_' + but_name.split("_")[1] + '_' + but_name.split("_")[2]
+		var trReq = document.getElementById(tr_id)
+  		var col = trReq.getElementsByClassName("sub_ele_td_comp")[0]
+		var bla = $('#anti_phrase_category_bullet_description').val();
+		console.log(bla)
+		var req_table_id = "try_table_" + but_name.split('_')[0]
+		var req_table = document.getElementById(req_table_id)
+		var req_tableBody = req_table.getElementsByTagName("tbody")[0]
+		var make_anti_phrase_tr = "<tr class=\"ele to_make_anti_phrase_category success\"><td class=\"ele_td_verb\">logic::anti_phrase_category</td><td class=\"ele_td_noun\">" + bla + "</td><td class=\"ele_td_hs\"><div><a></a></div></td><td class=\"ele_td_ss\"><div><a></a></div></td><td class=\"ele_td_comp\">" + col.innerHTML + "</td></tr>";
+		req_tableBody.innerHTML += make_anti_phrase_tr
+		alert("Anti-Phrase_category added in table")
+		// console.log(req_tableBody.innerHTML);
+	});
+
+
+	$("#add_comp").delegate("#modal1_add_comp_button_data_panel", "click", function() {
+		var but_name = $(this).attr("name");
+		var tr_id = "subMyInput_" + but_name
+		var trReq = document.getElementById(tr_id)
+  		var col0 = trReq.getElementsByClassName("sub_ele_td_source")[0]
+  		var col1 = trReq.getElementsByClassName("sub_ele_td_components")[0]
+		var values = $('#comp_add_select_data_panel').val();
+		console.log(values);
+		var req_table_id = "try_table_" + but_name.split('_')[0] + '_' + but_name.split('_')[1]
+		var req_table = document.getElementById(req_table_id)
+		var req_tableBody = req_table.getElementsByTagName("tbody")[0]
+		var tr_html = "<tr class=\"ele_sub_table to_add_comp_data_panel success\"><td class=\"sub_ele_td_source\">" + col0.innerHTML + "</td><td class=\"sub_ele_td_components\">" + col1.innerHTML + "</td><td class=\"sub_ele_td_hs\"><div><a></a></div></td><td class=\"sub_ele_td_ss\"><div><a></a></div></td><td class=\"sub_ele_td_comp\"><div><table class=\"table\">";
+		$.each(values, function(ke_comp_dp, val_comp_dp) { 
+    		var te_comp = "<tr><td>" + val_comp_dp + "</td></tr>";
+    		tr_html += te_comp;
+		});
+		tr_html += "</table></div></td></tr>"
+		req_tableBody.innerHTML += tr_html;
+		// var but_name = $(this).attr("name");
+		// var tr_id = "subMyInput_" + but_name
+	});
+
+	$("#remove_comp").delegate("#modal1_remove_comp_button_data_panel", "click", function() {
+		var but_name = $(this).attr("name");
+		var tr_id = "subMyInput_" + but_name
+		// console.log(tr_id);
+		var req_tr = document.getElementById(tr_id);
+		$(document.getElementById(tr_id)).addClass("to_remove_comp_data_panel");
+		var col1 = req_tr.getElementsByClassName("sub_ele_td_comp")[0]
+		var all_comp_lis = col1.getElementsByTagName("td");
+		var all_comp_arr = [];
+		$.each(all_comp_lis, function(ke_td_dp, val_td_dp) { 
+			var te_comp = val_td_dp.innerText;
+			all_comp_arr.push(te_comp);
+		});
+		console.log(all_comp_arr)
+		var values = $('#comp_remove_select_data_panel').val();
+		console.log(values);
+		console.log(jQuery.inArray(values[0], all_comp_arr))
+		$.each(values, function(ke_comp_dp, val_comp_dp) {
+    		$(document.getElementById(tr_id).getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")[jQuery.inArray(val_comp_dp, all_comp_arr)]).addClass("error to_remove_comp_td_data_panel")
+		});
+	});
+
+
+	$("#make_anti_phrase_logic").delegate("#make_anti_phrase_data_panel_button", "click", function() {
+		var but_name = $(this).attr("name");
+		var tr_id = "subMyInput_" + but_name
+		var trReq = document.getElementById(tr_id)
+  		var bla = $('#anti_phrase_data_panel_bullet_description').val();
+		var values = $('#comp_antiphrase_select_data_panel').val();
+		console.log(values);
+		var req_table_id = "try_table_" + but_name.split('_')[0]
+		var req_table = document.getElementById(req_table_id)
+		var req_tableBody = req_table.getElementsByTagName("tbody")[0]
+		var make_anti_phrase_tr = "<tr class=\"ele to_make_anti_phrase_data_panel success\"><td class=\"ele_td_verb\">logic::anti_phrase_data_panel</td><td class=\"ele_td_noun\">" + bla + "</td><td class=\"ele_td_hs\"><div><a></a></div></td><td class=\"ele_td_ss\"><div><a></a></div></td><td class=\"ele_td_comp\"><div><table class=\"table\">";
+		$.each(values, function(ke_comp_dp, val_comp_dp) { 
+    		var te_comp = "<tr><td>" + val_comp_dp + "</td></tr>";
+    		make_anti_phrase_tr += te_comp;
+		});
+		make_anti_phrase_tr += "</table></div></td></tr>"
+		req_tableBody.innerHTML += make_anti_phrase_tr
+		alert("Anti-Phrase_dataPanel added in table")
+		// var but_name = $(this).attr("name");
+		// var tr_id = "subMyInput_" + but_name
+	});
+
+	$("#pos_phrase_category_button").click(function() {
+		var but_name = $(this).attr("name");
+		var values = $('#pos_phrase_select_category option:selected').val();
+		console.log(values);
+		var req_comp = "";
+		$.each(useful_array, function(ke_cate, val_comp) { 
+    		if(val_comp[0] == values) {
+    			req_comp = val_comp[1];
+        		return false; 
+    		}
+		});
+		var bla = $('#pos_phrase_category_bullet_input').val();
+		console.log(bla)
+		console.log(req_comp)
+		var req_table_id = "try_table_" + but_name
+		var req_table = document.getElementById(req_table_id)
+		var req_tableBody = req_table.getElementsByTagName("tbody")[0]
+		req_tableBody.innerHTML += "<tr class=\"ele to_add_positive_phrase_category success\"><td class=\"ele_td_verb\">logic::positive_phrase_category</td><td class=\"ele_td_noun\"><div><table class=\"table\"><tr><td><span style=\"font-weight:bold\">category</span></td><td>" + values + "</td></tr><tr><td><span style=\"font-weight:bold\">keyword</span></td><td>" + bla + "</td></tr></table></div></td><td class=\"ele_td_hs\"><div><a></a></div></td><td class=\"ele_td_ss\"><div><a></a></div></td><td class=\"ele_td_comp\"><div><table class=\"table\"><tr><td>" + req_comp + "</td></tr></table></div></td></tr>"
+		// var but_name = $(this).attr("name");
+		// var tr_id = "subMyInput_" + but_name
+	});
+
+	$("#pos_phrase_category_button").click(function() {
+		var but_name = $(this).attr("name");
+		var values = $('#pos_phrase_select_category option:selected').val();
+		console.log(values);
+		var req_comp = "";
+		$.each(useful_array, function(ke_cate, val_comp) { 
+    		if(val_comp[0] == values) {
+    			req_comp = val_comp[1];
+        		return false; 
+    		}
+		});
+		var bla = $('#pos_phrase_category_bullet_input').val();
+		console.log(bla)
+		console.log(req_comp)
+		var req_table_id = "try_table_" + but_name
+		var req_table = document.getElementById(req_table_id)
+		var req_tableBody = req_table.getElementsByTagName("tbody")[0]
+		req_tableBody.innerHTML += "<tr class=\"ele to_add_positive_phrase_category success\"><td class=\"ele_td_verb\">logic::positive_phrase_category</td><td class=\"ele_td_noun\"><div><table class=\"table\"><tr><td><span style=\"font-weight:bold\">category</span></td><td>" + values + "</td></tr><tr><td><span style=\"font-weight:bold\">keyword</span></td><td>" + bla + "</td></tr></table></div></td><td class=\"ele_td_hs\"><div><a></a></div></td><td class=\"ele_td_ss\"><div><a></a></div></td><td class=\"ele_td_comp\"><div><table class=\"table\"><tr><td>" + req_comp + "</td></tr></table></div></td></tr>"
+		// var but_name = $(this).attr("name");
+		// var tr_id = "subMyInput_" + but_name
+	});
+
+
+
+
 
 	$( 'input' ).keyup(function (e) {
 		var inputId = $(e.target).attr("id");
@@ -693,7 +974,7 @@ $('#exampleModal1').on('show.bs.modal', function (event) {
 			console.log(col_type);
 			var table_id = "try_table_".concat(element);
 			table = document.getElementById(table_id);
-			tr = table.getElementsByClassName("collapsed ele");
+			tr = table.getElementsByClassName("ele");
 			console.log(tr.length);
 			// td = tr[0].getElementsByClassName("ele_td_noun");
 			// console.log(td.length);
@@ -871,23 +1152,8 @@ $('#exampleModal1').on('show.bs.modal', function (event) {
 
 		}
 	});
-// $(".selectpicker").selectpicker('refresh');
 });
 
 
-// $(document).ready(function(){
-//     $('.filterable .btn-filter').click(function(){
-//     	console.log("button pressed");
-//         var $panel = $(this).parents('.filterable'),
-//         $filters = $panel.find('.filters input');
-//         // $tbody = $panel.find('.table tbody');
-//         if ($filters.prop('disabled') == true) {
-//             $filters.prop('disabled', false);
-//             $filters.first().focus();
-//         } else {
-//             $filters.val('').prop('disabled', true);
-//         }
-//     });
-// });
 </script>
 @endsection
