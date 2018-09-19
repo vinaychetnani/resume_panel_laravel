@@ -22,4 +22,5 @@ Route::get('/leftRight', ['uses' => 'TryController@leftRight']);
 Route::get('/form', ['uses' => 'TryController@showForm']);
 Route::post('/parseform', ['uses' => 'TryController@parseForm'])->name('parseform');
 Route::get('/try_sp', ['uses' => 'TryController@tryExec']);
+Route::post('/pushDatabase', ['uses' => 'TryController@pushDatabase']);
 

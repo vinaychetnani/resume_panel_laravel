@@ -82,6 +82,9 @@ table { table-layout: fixed; }
 
 
 @section('content')
+<head>
+	<meta name="_token" content="{{ csrf_token() }}">
+</head>
     <div class="panel panel-default" id="main_panel">
         <div style="padding-top: 20px; padding-bottom: 20px" class="panel-heading text-center">
             <h3>Resume Panel</h3>
@@ -93,7 +96,7 @@ table { table-layout: fixed; }
     				<div class="col-md-4">
         				<div class="form-group">
 		                    {!! Form::label('r_id', 'Resume Id', ['class' => 'control-label']) !!}
-		                    {!! Form::text('r_id', null, ['class' => 'form-control']) !!}
+		                    {!! Form::text('r_id', '77777', ['class' => 'form-control']) !!}
 		                </div>
 		            </div>
 
@@ -547,13 +550,17 @@ table { table-layout: fixed; }
   				</div>
   			</div>
   			<div class="row">
-  				<div class="col-md-12">
-  					<div style="padding-bottom: 10px; text-align: center">
-        				<button type="submit" class="btn btn-primary" id="save_changes">
-                			Save Changes
-            			</button>
-        			</div>
-  				</div>
+  				<div class="col-md-6" style="padding-bottom: 10px; text-align: center">
+    				<button type="submit" class="btn btn-primary" id="save_changes">
+            			Save Changes
+        			</button>
+        			{{csrf_field()}}
+        		</div>
+        		<div class="col-md-6" style="padding-bottom: 10px; text-align: center">
+    				<button class="btn btn-primary" id="go_back">
+            			Back
+        			</button>
+        		</div>
   			</div>
 		</div>
 	</div>
@@ -608,7 +615,13 @@ $(document).ready(function(){
 	var change_type_array = ["to_remove_hs", "to_remove_ss", "to_remove_hs_ss", "to_add_ss", "to_add_hs", "to_add_anti_phrase_vn", "to_remove_comp", "to_add_comp", "to_make_anti_phrase_category", "to_add_comp_data_panel", "to_remove_comp_data_panel", "to_make_anti_phrase_data_panel", "to_add_positive_phrase_category","to_add_positive_phrase_datapanel", "to_make_anti_vn_soft", "to_make_anti_vn_hard"];
 
 
-	$("#save_changes").click(function(){
+	$("#go_back").click(function(){
+		$(document.getElementById("main_panel")).removeClass("d-none");
+		$(document.getElementById("review_panel")).addClass("d-none");
+	});
+
+	$("#save_changes").click(function(e){
+		e.preventDefault();
 		var rev_panel = document.getElementById("review_panel");
 		var rev_panel_tbody = rev_panel.getElementsByTagName("tbody")[0];
 		var tbody_tr = rev_panel_tbody.getElementsByClassName("edited_tr")
@@ -622,178 +635,228 @@ $(document).ready(function(){
 			var req_id = $(document.getElementById("review_panel").getElementsByTagName("tbody")[0].getElementsByClassName("edited_tr")[key_tr]).attr("id");
 			console.log(req_id);
 			var req_tr = document.getElementById(req_id);
-			if ($(document.getElementById(req_id)).hasClass("to_add_ss")){
-				var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
-				item = {}
-				item["verb"] = compo[1].textContent;
-				item["noun"] = compo[3].textContent;
-				item["action"] = "add";
-				item["skill_type"] = "ss";
-				var i_skill = req_tr.getElementsByClassName("sub_ele_td_ss")[0].getElementsByTagName("td")[0].innerText
-				item["skill"] = i_skill;
-				jsonObj_vn.push(item);
+			if ($(document.getElementById(req_id)).hasClass("d-none")){
+				return;
 			}
-			if ($(document.getElementById(req_id)).hasClass("to_add_hs")){
-				var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
-				item = {}
-				item["verb"] = compo[1].textContent;
-				item["noun"] = compo[3].textContent;
-				item["action"] = "add";
-				item["skill_type"] = "hs";
-				var i_skill = req_tr.getElementsByClassName("sub_ele_td_hs")[0].getElementsByTagName("td")[0].innerText
-				item["skill"] = i_skill;
-				jsonObj_vn.push(item);
-			}
-			if ($(document.getElementById(req_id)).hasClass("to_remove_hs")){
-				var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
-				item = {}
-				item["verb"] = compo[1].textContent;
-				item["noun"] = compo[3].textContent;
-				item["action"] = "remove";
-				item["skill_type"] = "hs";
-				var i_skill = req_tr.getElementsByClassName("sub_ele_td_hs")[0].getElementsByTagName("td")[0].innerText
-				item["skill"] = i_skill;
-				jsonObj_vn.push(item);
-			}
-			if ($(document.getElementById(req_id)).hasClass("to_remove_ss")){
-				var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
-				item = {}
-				item["verb"] = compo[1].textContent;
-				item["noun"] = compo[3].textContent;
-				item["action"] = "remove";
-				item["skill_type"] = "ss";
-				var i_skill = req_tr.getElementsByClassName("sub_ele_td_ss")[0].getElementsByTagName("td")[0].innerText
-				item["skill"] = i_skill;
-				jsonObj_vn.push(item);
-			}
-			if ($(document.getElementById(req_id)).hasClass("to_remove_comp")){
-				var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
-				var comp = req_tr.getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")[0].innerText
-				item = {}
-				item["action"] = "remove";
-				item["sub_type"] = compo[1].textContent;
-				item["competency"] = comp;
-				item["phrase_type"] = "category"
-				item["phrase"] = compo[3].textContent;
-				jsonObj_phrase.push(item);
-			}
-			if ($(document.getElementById(req_id)).hasClass("to_add_comp")){
-				var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
-				var comp = req_tr.getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")[0].innerText
-				item = {}
-				item["action"] = "add";
-				item["sub_type"] = compo[1].textContent;
-				item["competency"] = comp;
-				item["phrase_type"] = "category"
-				item["phrase"] = compo[3].textContent;
-				jsonObj_phrase.push(item);
-			}
-			if ($(document.getElementById(req_id)).hasClass("to_remove_comp_data_panel")){
-				var source = req_tr.getElementsByClassName("sub_ele_td_source")[0].textContent;
-				var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
-				var comp = req_tr.getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")
-				$.each(comp, function(key_comp, value_comp) {
-					if($(document.getElementById(req_id).getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")[key_comp]).hasClass("to_remove_comp_td_data_panel")){
+			else{
+				if ($(document.getElementById(req_id)).hasClass("to_add_ss")){
+					var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
+					item = {}
+					item["verb"] = compo[1].textContent;
+					item["noun"] = compo[3].textContent;
+					item["action"] = "add";
+					item["skill_type"] = "ss";
+					var i_skill = req_tr.getElementsByClassName("sub_ele_td_ss")[0].getElementsByTagName("td")[0].innerText
+					item["skill"] = i_skill;
+					jsonObj_vn.push(item);
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_add_hs")){
+					var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
+					item = {}
+					item["verb"] = compo[1].textContent;
+					item["noun"] = compo[3].textContent;
+					item["action"] = "add";
+					item["skill_type"] = "hs";
+					var i_skill = req_tr.getElementsByClassName("sub_ele_td_hs")[0].getElementsByTagName("td")[0].innerText
+					item["skill"] = i_skill;
+					jsonObj_vn.push(item);
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_remove_hs")){
+					var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
+					item = {}
+					item["verb"] = compo[1].textContent;
+					item["noun"] = compo[3].textContent;
+					item["action"] = "remove";
+					item["skill_type"] = "hs";
+					var i_skill = req_tr.getElementsByClassName("sub_ele_td_hs")[0].getElementsByTagName("td")[0].innerText
+					item["skill"] = i_skill;
+					jsonObj_vn.push(item);
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_remove_ss")){
+					var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
+					item = {}
+					item["verb"] = compo[1].textContent;
+					item["noun"] = compo[3].textContent;
+					item["action"] = "remove";
+					item["skill_type"] = "ss";
+					var i_skill = req_tr.getElementsByClassName("sub_ele_td_ss")[0].getElementsByTagName("td")[0].innerText
+					item["skill"] = i_skill;
+					jsonObj_vn.push(item);
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_remove_comp")){
+					var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
+					var comp = req_tr.getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")[0].innerText
+					item = {}
+					item["action"] = "remove";
+					item["sub_type"] = compo[1].textContent;
+					item["competency"] = comp;
+					item["phrase_type"] = "category"
+					item["phrase"] = compo[3].textContent;
+					jsonObj_phrase.push(item);
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_add_comp")){
+					var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
+					var comp = req_tr.getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")[0].innerText;
+					item = {}
+					item["action"] = "add";
+					item["sub_type"] = compo[1].textContent;
+					item["competency"] = comp;
+					item["phrase_type"] = "category"
+					item["phrase"] = compo[3].textContent;
+					jsonObj_phrase.push(item);
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_remove_comp_data_panel")){
+					var source = req_tr.getElementsByClassName("sub_ele_td_source")[0].textContent;
+					var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
+					var comp = req_tr.getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")
+					$.each(comp, function(key_comp, value_comp) {
+						if($(document.getElementById(req_id).getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")[key_comp]).hasClass("to_remove_comp_td_data_panel")){
+							item = {}
+							item["action"] = "remove";
+							item["sub_type"] = source;
+							item["competency"] = value_comp.innerText;
+							item["phrase_type"] = "datapanel"
+							item["phrase"] = compo[1].textContent;
+							jsonObj_phrase.push(item);
+						}
+					});
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_add_comp_data_panel")){
+					var source = req_tr.getElementsByClassName("sub_ele_td_source")[0].textContent;
+					var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
+					var comp = req_tr.getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")
+					$.each(comp, function(key_comp, value_comp) {
 						item = {}
-						item["action"] = "remove";
+						item["action"] = "add";
 						item["sub_type"] = source;
 						item["competency"] = value_comp.innerText;
 						item["phrase_type"] = "datapanel"
 						item["phrase"] = compo[1].textContent;
 						jsonObj_phrase.push(item);
+					});
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_add_positive_phrase_category")){
+					var compo = req_tr.getElementsByClassName("ele_td_noun")[0].getElementsByTagName("td")
+					var comp = req_tr.getElementsByClassName("ele_td_comp")[0].getElementsByTagName("td")[0].innerText
+					item = {}
+					item["action"] = "add";
+					item["sub_type"] = compo[1].textContent;
+					item["competency"] = comp;
+					item["phrase_type"] = "category"
+					item["phrase"] = compo[3].textContent;
+					jsonObj_phrase.push(item);
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_add_positive_phrase_datapanel")){
+					var compo = req_tr.getElementsByClassName("ele_td_noun")[0].getElementsByTagName("td")
+					var comp = req_tr.getElementsByClassName("ele_td_comp")[0].getElementsByTagName("td")
+					$.each(comp, function(key_comp, value_comp) {
+						item = {}
+						item["action"] = "add";
+						item["sub_type"] = compo[1].textContent;
+						item["competency"] = value_comp.innerText;
+						item["phrase_type"] = "datapanel"
+						item["phrase"] = compo[3].textContent;
+						jsonObj_phrase.push(item);
+					});
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_add_anti_phrase_vn")){
+					var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].textContent;
+					var ss_lis = req_tr.getElementsByClassName("sub_ele_td_ss")[0].getElementsByTagName("td");
+					var hs_lis = req_tr.getElementsByClassName("sub_ele_td_hs")[0].getElementsByTagName("td");
+					if (hs_lis.length == 1 && ss_lis.length == 0){
+						item = {}
+						item["phrase"] = compo
+						item["skill_type"] = "hs";
+						item["skill"] = hs_lis[0].innerText;
+						jsonObj_antiphrase.push(item);
 					}
-				});
-			}
-			if ($(document.getElementById(req_id)).hasClass("to_add_comp_data_panel")){
-				var source = req_tr.getElementsByClassName("sub_ele_td_source")[0].textContent;
-				var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td")
-				var comp = req_tr.getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")
-				$.each(comp, function(key_comp, value_comp) {
+					if (hs_lis.length == 0 && ss_lis.length == 1){
+						item = {}
+						item["phrase"] = compo
+						item["skill_type"] = "ss";
+						item["skill"] = ss_lis[0].innerText;
+						jsonObj_antiphrase.push(item);
+					}
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_make_anti_phrase_category")){
+					var compo = req_tr.getElementsByClassName("ele_td_noun")[0].textContent;
+					var comp = req_tr.getElementsByClassName("ele_td_comp")[0].getElementsByTagName("td")[0].innerText;
 					item = {}
-					item["action"] = "add";
-					item["sub_type"] = source;
-					item["competency"] = value_comp.innerText;
-					item["phrase_type"] = "datapanel"
-					item["phrase"] = compo[1].textContent;
-					jsonObj_phrase.push(item);
-				});
-			}
-			if ($(document.getElementById(req_id)).hasClass("to_add_positive_phrase_category")){
-				var compo = req_tr.getElementsByClassName("ele_td_noun")[0].getElementsByTagName("td")
-				var comp = req_tr.getElementsByClassName("ele_td_comp")[0].getElementsByTagName("td")[0].innerText
-				item = {}
-				item["action"] = "add";
-				item["sub_type"] = compo[1].textContent;
-				item["competency"] = comp;
-				item["phrase_type"] = "category"
-				item["phrase"] = compo[3].textContent;
-				jsonObj_phrase.push(item);
-			}
-			if ($(document.getElementById(req_id)).hasClass("to_add_positive_phrase_datapanel")){
-				var compo = req_tr.getElementsByClassName("ele_td_noun")[0].getElementsByTagName("td")
-				var comp = req_tr.getElementsByClassName("ele_td_comp")[0].getElementsByTagName("td")
-				$.each(comp, function(key_comp, value_comp) {
-					item = {}
-					item["action"] = "add";
-					item["sub_type"] = compo[1].textContent;
-					item["competency"] = value_comp.innerText;
-					item["phrase_type"] = "datapanel"
-					item["phrase"] = compo[3].textContent;
-					jsonObj_phrase.push(item);
-				});
-			}
-			if ($(document.getElementById(req_id)).hasClass("to_add_anti_phrase_vn")){
-				var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].textContent;
-				var ss_lis = req_tr.getElementsByClassName("sub_ele_td_ss")[0].getElementsByTagName("td");
-				var hs_lis = req_tr.getElementsByClassName("sub_ele_td_hs")[0].getElementsByTagName("td");
-				if (hs_lis.length == 1 && ss_lis.length == 0){
-					item = {}
-					item["phrase"] = compo
-					item["skill_type"] = "hs";
-					item["skill"] = hs_lis[0].innerText;
+					item["phrase"] = compo;
+					item["skill_type"] = "competency";
+					item["skill"] = comp;
 					jsonObj_antiphrase.push(item);
 				}
-				if (hs_lis.length == 0 && ss_lis.length == 1){
+				if ($(document.getElementById(req_id)).hasClass("to_make_anti_phrase_data_panel")){
+					var compo = req_tr.getElementsByClassName("ele_td_noun")[0].textContent;
+					var comp = req_tr.getElementsByClassName("ele_td_comp")[0].getElementsByTagName("td");
+					$.each(comp, function(key_comp, value_comp) {
+						item = {}
+						item["phrase"]= compo;
+						item["skill_type"] = "competency";
+						item["skill"] = value_comp.innerText;
+						jsonObj_antiphrase.push(item);
+					});
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_remove_hs_ss")){
+					var ss_lis = req_tr.getElementsByClassName("sub_ele_td_ss")[0].getElementsByTagName("td");
+					var hs_lis = req_tr.getElementsByClassName("sub_ele_td_hs")[0].getElementsByTagName("td");
 					item = {}
-					item["phrase"] = compo
-					item["skill_type"] = "ss";
-					item["skill"] = ss_lis[0].innerText;
-					jsonObj_antiphrase.push(item);
+					item["hs"] = hs_lis[0].innerText;
+					item["ss"] = ss_lis[0].innerText;
+					jsonObj_hs_ss.push(item);
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_make_anti_vn_soft")){
+					var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td");
+					var comp = req_tr.getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")[0].innerText;
+					item = {}
+					item["verb"] = compo[1].innerText;
+					item["noun"] = compo[3].innerText;
+					item["competency"] = comp;
+					jsonObj_antivn.push(item);
+				}
+				if ($(document.getElementById(req_id)).hasClass("to_make_anti_vn_hard")){
+					var compo = req_tr.getElementsByClassName("sub_ele_td_components")[0].getElementsByTagName("td");
+					var comp = req_tr.getElementsByClassName("sub_ele_td_comp")[0].getElementsByTagName("td")[0].innerText;
+					item = {}
+					item["verb"] = compo[1].innerText;
+					item["noun"] = compo[3].innerText;
+					item["competency"] = comp;
+					jsonObj_antivn.push(item);
 				}
 			}
-			if ($(document.getElementById(req_id)).hasClass("to_make_anti_phrase_category")){
-				var compo = req_tr.getElementsByClassName("ele_td_noun")[0].textContent;
-				var comp = req_tr.getElementsByClassName("ele_td_comp")[0].getElementsByTagName("td")[0].innerText;
-				item = {}
-				item["phrase"] = compo;
-				item["skill_type"] = "competency";
-				item["skill"] = comp;
-				jsonObj_antiphrase.push(item);
-			}
-			if ($(document.getElementById(req_id)).hasClass("to_make_anti_phrase_data_panel")){
-				var compo = req_tr.getElementsByClassName("ele_td_noun")[0].textContent;
-				var comp = req_tr.getElementsByClassName("ele_td_comp")[0].getElementsByTagName("td");
-				$.each(comp, function(key_comp, value_comp) {
-					item = {}
-					item["action"] = "add";
-					item["sub_type"] = compo[1].textContent;
-					item["competency"] = value_comp.innerText;
-					item["phrase_type"] = "datapanel"
-					item["phrase"] = compo[3].textContent;
-					jsonObj_phrase.push(item);
-				});
-				item = {}
-				item["verb"] = compo[1].textContent;
-				item["noun"] = compo[3].textContent;
-				item["action"] = "add";
-				item["skill_type"] = "ss";
-				var i_skill = req_tr.getElementsByClassName("sub_ele_td_ss")[0].getElementsByTagName("td")[0].innerText
-				item["skill"] = i_skill;
-				jsonObj_antiphrase.push(item);
-			}
-
 		});
-		console.log(jsonObj_phrase);
+		// console.log(jsonObj_antivn);
+		// all_json = ["jsonObj_vn":jsonObj_vn, "jsonObj_phrase":jsonObj_phrase, "jsonObj_antiphrase":jsonObj_antiphrase, "jsonObj_hs_ss":jsonObj_hs_ss, "jsonObj_antivn":jsonObj_antivn];
+		var t_r_id = $("#r_id").val();
+		$.ajaxSetup({
+            headers: {
+              	'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+          	}
+        });
+        $.ajax({
+	        url: '{{url('/pushDatabase')}}',
+	        type: 'POST',
+	        data: {"jsonObj_vn":jsonObj_vn,
+	               "jsonObj_phrase":jsonObj_phrase,
+	               "jsonObj_antiphrase":jsonObj_antiphrase,
+	               "jsonObj_hs_ss":jsonObj_hs_ss,
+	               "jsonObj_antivn":jsonObj_antivn,
+	               "resume_id":t_r_id
+	    	},
+	        success: function (data) {
+	            console.log(data);
+	        }
+	        // ,
+	        // complete: function(data) {
+
+	        // },
+
+	        // error: function (request, status, error) {
+	        //     makeAlertBox('error| '+request.responseJSON.status);
+	        // }
+	    });
+	    alert("Changes pushed in Database");
 	});
 
 
@@ -806,99 +869,195 @@ $(document).ready(function(){
 
 		var all_type_trs = $(document.getElementsByClassName("to_remove_hs"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_remove_hs error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_remove_hs")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_remove_hs")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_remove_hs error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_remove_hs")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_remove_ss"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_remove_ss error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_remove_ss")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_remove_ss")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_remove_ss error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_remove_ss")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_remove_hs_ss"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_remove_hs_ss\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_remove_hs_ss")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_remove_hs_ss")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_remove_hs_ss\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_remove_hs_ss")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_add_hs"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_add_hs success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_add_hs")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_add_hs")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_add_hs success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_add_hs")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_add_ss"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_add_ss success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_add_ss")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_add_ss")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_add_ss success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_add_ss")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_add_anti_phrase_vn"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_add_anti_phrase_vn error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_add_anti_phrase_vn")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_add_anti_phrase_vn")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_add_anti_phrase_vn error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_add_anti_phrase_vn")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_remove_comp"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_remove_comp error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_remove_comp")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_remove_comp")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_remove_comp error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_remove_comp")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_add_comp"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_add_comp success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_add_comp")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_add_comp")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_add_comp success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_add_comp")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_make_anti_phrase_category"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_make_anti_phrase_category error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_make_anti_phrase_category")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_make_anti_phrase_category")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_make_anti_phrase_category error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_make_anti_phrase_category")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_add_comp_data_panel"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_add_comp_data_panel success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_add_comp_data_panel")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_add_comp_data_panel")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_add_comp_data_panel success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_add_comp_data_panel")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_remove_comp_data_panel"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_remove_comp_data_panel\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_remove_comp_data_panel")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_remove_comp_data_panel")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_remove_comp_data_panel\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_remove_comp_data_panel")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_make_anti_phrase_data_panel"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_make_anti_phrase_data_panel error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_make_anti_phrase_data_panel")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_make_anti_phrase_data_panel")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_make_anti_phrase_data_panel error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_make_anti_phrase_data_panel")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_add_positive_phrase_category"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_add_positive_phrase_category success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_add_positive_phrase_category")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_add_positive_phrase_category")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_add_positive_phrase_category success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_add_positive_phrase_category")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_add_positive_phrase_datapanel"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_add_positive_phrase_datapanel success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_add_positive_phrase_datapanel")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_add_positive_phrase_datapanel")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_add_positive_phrase_datapanel success\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_add_positive_phrase_datapanel")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_make_anti_vn_soft"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_make_anti_vn_soft error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_make_anti_vn_soft")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_make_anti_vn_soft")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_make_anti_vn_soft error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_make_anti_vn_soft")[key_tr]).addClass("reviewed");
+			}
 		});
 		var all_type_trs = $(document.getElementsByClassName("to_make_anti_vn_hard"));
 		$.each( all_type_trs, function(key_tr, value_tr) {
-			var rev_tr = "<tr class=\"edited_tr to_make_anti_vn_hard error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
-			rev_panel_tbody.innerHTML += rev_tr;
-			index_id += 1;
+			if ($(document.getElementsByClassName("to_make_anti_vn_hard")[key_tr]).hasClass("edited_tr") || $(document.getElementsByClassName("to_make_anti_vn_hard")[key_tr]).hasClass("reviewed")) {
+				return;
+			}
+			else{
+				var rev_tr = "<tr class=\"edited_tr to_make_anti_vn_hard error\" id=\"review_tr_" + index_id + "\">" + value_tr.innerHTML + "<td><button type=\"button\" class=\"btn btn-secondary btn-xs\" id=\"remove_review_tr_button\" name=\"" +  index_id + "\">X</button></td></tr>";
+				rev_panel_tbody.innerHTML += rev_tr;
+				index_id += 1;
+				$(document.getElementsByClassName("to_make_anti_vn_hard")[key_tr]).addClass("reviewed");
+			}
 		});
 		$(document.getElementById("main_panel")).addClass("d-none");
 		$(document.getElementById("review_panel")).removeClass("d-none");
@@ -1025,8 +1184,8 @@ $('#exampleModal1').on('show.bs.modal', function (event) {
   			var corr_bull = $('#' + bull_id).text();
   			var corr_bull1 = jQuery.trim(corr_bull);
   			console.log(corr_bull1);
-  			var div_contents_add_comp = "<div><div style=\"padding-top: 15px\"><a style=\"font-size: 15px\">Add new keyword to category &nbsp;&nbsp;<b><u>"  + compo_lis[3].textContent + "</u></b></a></div><hr><div class=\"container\"><div class=\"row\"><div class=\"col-md-12\"><select id=\"comp_add_select\"><option>" + useful_array[0][0] + "</option><option>" + useful_array[1][0] + "</option><option>" + useful_array[2][0] + "</option><option>" + useful_array[3][0] +"</option><option>" + useful_array[4][0] + "</option><option>" + useful_array[5][0] + "</option><option>" + useful_array[6][0] + "</option><option>" + useful_array[7][0] + "</option></select></div></div></div><div style=\"padding-top:15px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal1_add_comp_button\" name=\"" +  id_back + "\">ADD</button></div></div>";
-  			var div_contents_remove_comp = "<div><div style=\"padding-top: 15px\"><a style=\"font-size: 15px\">Remove category &nbsp;&nbsp;<b><u>"  + compo_lis[1].textContent + "</u></b>&nbsp;&nbsp; from keyword &nbsp;&nbsp;<b><u>" + compo_lis[3].textContent + "</u></b></a></div><hr><div style=\"padding-top:10px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal1_remove_comp_button\" name=\"" +  id_back + "\">REMOVE</button></div></div>";
+  			var div_contents_add_comp = "<div><div style=\"padding-top: 15px\"><a style=\"font-size: 15px\">Add new category to keyword &nbsp;&nbsp;<b><u>"  + compo_lis[3].textContent + "</u></b></a></div><hr><div class=\"container\"><div class=\"row\"><div class=\"col-md-12\"><select id=\"comp_add_select\"><option>" + useful_array[0][0] + "</option><option>" + useful_array[1][0] + "</option><option>" + useful_array[2][0] + "</option><option>" + useful_array[3][0] +"</option><option>" + useful_array[4][0] + "</option><option>" + useful_array[5][0] + "</option><option>" + useful_array[6][0] + "</option><option>" + useful_array[7][0] + "</option></select></div></div></div><div style=\"padding-top:15px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal1_add_comp_button\" name=\"" +  id_back + "\">ADD</button></div></div>";
+  			var div_contents_remove_comp = "<div><div style=\"padding-top: 15px\"><a style=\"font-size: 15px\">Remove keyword &nbsp;&nbsp;<b><u>" + compo_lis[3].textContent + "</u></b> &nbsp;&nbsp; from category &nbsp;&nbsp;<b><u>"  + compo_lis[1].textContent + "</u></b></a></div><hr><div style=\"padding-top:10px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"modal1_remove_comp_button\" name=\"" +  id_back + "\">REMOVE</button></div></div>";
   			var div_contents_make_anti_phrase = "<div><div style=\"padding-top: 10px\"><input type=\"text\" class=\"form-control\" value=\""+ corr_bull1 + "\" id=\"anti_phrase_category_bullet_description\"></div><div style=\"padding-top: 10px\" class=\"row\"><div class=\"col-md-3\">Competency</div><div class=\"col-md-3\"><u><b>" + comp_lis.textContent + "</u></b></div></div><div style=\"padding-top: 10px\"><button type=\"button\" class=\"btn btn-secondary\" id=\"make_anti_phrase_category_button\" name=\"" +  id_back  + "\">MAKE ANTI-PHRASE</button></div></div>";
   			modal.find('#add_comp').html(div_contents_add_comp);
 			modal.find('#remove_comp').html(div_contents_remove_comp);
